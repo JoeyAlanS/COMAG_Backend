@@ -1,23 +1,69 @@
-COMAG_Backend
+<h1 align="center" style="font-weight: bold;">COMAG Backend 💻</h1>
 
-Este repositório contém o backend do projeto COMAG, desenvolvido com Node.js, Express e MySQL.
+<p align="center">
+ <a href="#tech">Technologies</a> • 
+ <a href="#started">Getting Started</a> • 
+ <a href="#structure">Project Structure</a> •
+ <a href="#routes">API Endpoints</a> •
+ <a href="#colab">Collaborators</a> •
+ <a href="#contribute">Contribute</a>
+</p>
 
-🚀 Tecnologias Utilizadas
+<p align="center">
+    <b>Backend do projeto COMAG, responsável pela gestão de produtos e serviços da empresa.</b>
+</p>
 
-Node.js
+<h2 id="tech">💻 Technologies</h2>
 
-Express
+- Node.js
+- Express
+- MySQL
+- dotenv
+- cors
+- mysql2
 
-MySQL
+<h2 id="started">🚀 Getting Started</h2>
 
-Dotenv
+<h3>Prerequisites</h3>
 
-Cors
+- [Node.js](https://nodejs.org/)
+- [Git](https://git-scm.com/)
+- [MySQL Workbench](https://www.mysql.com/products/workbench/)
 
-Nodemon (para desenvolvimento)
+<h3>Cloning</h3>
 
-📂 Estrutura do Projeto
+```bash
+git clone https://github.com/seu-usuario/comag_backend.git
+```
 
+<h3>Config .env variables</h3>
+
+Use o arquivo `.env.example` como referência para criar o `.env` com as credenciais do MySQL:
+
+```yaml
+PORT=3000
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=senha
+DB_NAME=comag_db
+```
+
+<h3>Installing dependencies</h3>
+
+```bash
+cd comag_backend
+npm install
+```
+
+<h3>Starting the project</h3>
+
+```bash
+npm run dev
+```
+
+<h2 id="structure">📁 Project Structure</h2>
+
+```bash
 COMAG_Backend/
 │-- node_modules/
 │-- src/
@@ -36,107 +82,76 @@ COMAG_Backend/
 │-- .env                      # Variáveis de ambiente
 │-- package.json               # Dependências do projeto
 │-- README.md                  # Documentação
+```
 
-📌 Como Instalar e Executar
+<h2 id="routes">📍 API Endpoints</h2>
 
-1️⃣ Clonar o Repositório
+| Route              | Description                                          |
+|--------------------|------------------------------------------------------|
+| <kbd>GET /api/products</kbd>  | Retorna todos os produtos |
+| <kbd>GET /api/products/:id</kbd>  | Retorna um produto pelo ID |
+| <kbd>POST /api/products</kbd>  | Adiciona um novo produto |
+| <kbd>PUT /api/products/:id</kbd>  | Atualiza um produto pelo ID |
+| <kbd>DELETE /api/products/:id</kbd>  | Remove um produto pelo ID |
 
-git clone https://github.com/seu-usuario/COMAG_Backend.git
-cd COMAG_Backend
+<h3 id="get-products">GET /api/products</h3>
 
-2️⃣ Instalar as Dependências
+**RESPONSE**
+```json
+[
+  {
+    "id": 1,
+    "name": "Compressor XYZ",
+    "price": 5000
+  }
+]
+```
 
-npm install
+<h3 id="post-products">POST /api/products</h3>
 
-3️⃣ Configurar o Banco de Dados MySQL
+**REQUEST**
+```json
+{
+  "name": "Novo Compressor",
+  "price": 4500
+}
+```
 
-Crie um banco de dados no MySQL chamado comag_db e adicione as credenciais ao arquivo .env:
+**RESPONSE**
+```json
+{
+  "message": "Produto criado com sucesso"
+}
+```
 
-PORT=3000
-DB_HOST=localhost
-DB_USER=root
-DB_PASS=suasenha
-DB_NAME=comag_db
+<h2 id="colab">🤝 Collaborators</h2>
 
-4️⃣ Rodar o Servidor
+Special thanks to all contributors to this project.
 
-Para iniciar o servidor em modo de desenvolvimento:
+<table>
+  <tr>
+    <td align="center">
+      <a href="#">
+        <img src="https://avatars.githubusercontent.com/u/86326118?v=4" width="100px;" alt="Profile Picture"/><br>
+        <sub>
+          <b>Joey Alan</b>
+        </sub>
+      </a>
+    </td>
+  </tr>
+</table>
 
-npm run dev
+<h2 id="contribute">📫 Contribute</h2>
 
-Ou em produção:
+Para contribuir com este projeto, siga os passos:
 
-npm start
+1. `git clone https://github.com/seu-usuario/comag_backend.git`
+2. `git checkout -b feature/NOVA_FEATURE`
+3. Siga o padrão de commits
+4. Abra um Pull Request explicando a alteração e aguarde a revisão!
 
-O backend rodará em http://localhost:3000.
+<h3>Documentations that might help</h3>
 
-🔗 Como Conectar o Backend ao Frontend
+[📝 How to create a Pull Request](https://www.atlassian.com/br/git/tutorials/making-a-pull-request)
 
-No frontend (Vite), as requisições podem ser feitas via fetch:
-
-fetch("http://localhost:3000/api/products")
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error("Erro ao buscar produtos:", error));
-
-Se o frontend e o backend estiverem rodando em domínios diferentes, certifique-se de que o CORS está ativado no backend (src/index.js):
-
-const cors = require("cors");
-app.use(cors());
-
-🛠 Testando com Postman ou Insomnia
-
-Inicie o backend (npm run dev).
-
-No Postman ou Insomnia, crie uma nova requisição GET para:
-
-http://localhost:3000/api/products
-
-Verifique a resposta JSON com os produtos.
-
-📝 Rotas Disponíveis
-
-📦 Produtos
-
-GET /api/products - Retorna todos os produtos.
-
-GET /api/products/:id - Retorna um produto pelo ID.
-
-POST /api/products - Adiciona um novo produto.
-
-PUT /api/products/:id - Atualiza um produto.
-
-DELETE /api/products/:id - Remove um produto.
-
-🛠 Serviços
-
-GET /api/services - Retorna todos os serviços.
-
-GET /api/services/:id - Retorna um serviço pelo ID.
-
-POST /api/services - Adiciona um novo serviço.
-
-PUT /api/services/:id - Atualiza um serviço.
-
-DELETE /api/services/:id - Remove um serviço.
-
-🤝 Contribuição
-
-Faça um fork do repositório.
-
-Crie uma nova branch (git checkout -b feature-nova).
-
-Faça suas alterações e commit (git commit -m 'Adiciona nova funcionalidade').
-
-Envie para o GitHub (git push origin feature-nova).
-
-Abra um Pull Request.
-
-📌 Autor
-
-Desenvolvido por ** Joey **
-
-📜 Licença
-
-Este projeto está sob a licença MIT.
-
+[💾 Commit pattern](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716)

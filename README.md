@@ -88,13 +88,28 @@ COMAG_Backend/
 
 | Route              | Description                                          |
 |--------------------|------------------------------------------------------|
-| <kbd>GET /api/products</kbd>  | Retorna todos os produtos |
-| <kbd>GET /api/products/:id</kbd>  | Retorna um produto pelo ID |
-| <kbd>POST /api/products</kbd>  | Adiciona um novo produto |
-| <kbd>PUT /api/products/:id</kbd>  | Atualiza um produto pelo ID |
-| <kbd>DELETE /api/products/:id</kbd>  | Remove um produto pelo ID |
+| <kbd>GET /api/products</kbd>       | Retorna todos os produtos              |
+| <kbd>GET /api/products/:id</kbd>   | Retorna um produto pelo ID             |
+| <kbd>POST /api/products</kbd>      | Adiciona um novo produto               |
+| <kbd>PUT /api/products/:id</kbd>   | Atualiza um produto pelo ID            |
+| <kbd>DELETE /api/products/:id</kbd>| Remove um produto pelo ID              |
+| <kbd>GET /api/services</kbd>       | Retorna todos os serviços              |
+| <kbd>GET /api/services/:id</kbd>   | Retorna um serviço pelo ID             |
+| <kbd>POST /api/services</kbd>      | Adiciona um novo serviço               |
+| <kbd>PUT /api/services/:id</kbd>   | Atualiza um serviço pelo ID            |
+| <kbd>DELETE /api/services/:id</kbd>| Remove um serviço pelo ID              |
+| <kbd>GET /api/orders</kbd>         | Retorna todos os pedidos               |
+| <kbd>GET /api/orders/:id</kbd>     | Retorna um pedido pelo ID              |
+| <kbd>POST /api/orders</kbd>        | Cria um novo pedido                    |
+| <kbd>GET /api/order-items</kbd>    | Retorna todos os itens de pedidos      |
+| <kbd>GET /api/order-items/:orderId</kbd> | Retorna itens de um pedido específico |
+| <kbd>POST /api/order-items</kbd>   | Adiciona um item a um pedido           |
+| <kbd>GET /api/users</kbd>          | Retorna todos os usuários              |
+| <kbd>GET /api/users/:id</kbd>      | Retorna um usuário pelo ID             |
+| <kbd>POST /api/users</kbd>         | Cria um novo usuário                   |
 
-<h3 id="get-products">GET /api/products</h3>
+
+### <h3 id="get-products">GET /api/products</h3>
 
 **RESPONSE**
 ```json
@@ -107,7 +122,22 @@ COMAG_Backend/
 ]
 ```
 
-<h3 id="post-products">POST /api/products</h3>
+---
+
+### <h3 id="get-product-by-id">GET /api/products/:id</h3>
+
+**RESPONSE**
+```json
+{
+  "id": 1,
+  "name": "Compressor XYZ",
+  "price": 5000
+}
+```
+
+---
+
+### <h3 id="post-products">POST /api/products</h3>
 
 **REQUEST**
 ```json
@@ -123,6 +153,261 @@ COMAG_Backend/
   "message": "Produto criado com sucesso"
 }
 ```
+
+---
+
+### <h3 id="put-product">PUT /api/products/:id</h3>
+
+**REQUEST**
+```json
+{
+  "name": "Compressor Atualizado",
+  "price": 4800
+}
+```
+
+**RESPONSE**
+```json
+{
+  "message": "Produto atualizado com sucesso"
+}
+```
+
+---
+
+### <h3 id="delete-product">DELETE /api/products/:id</h3>
+
+**RESPONSE**
+```json
+{
+  "message": "Produto removido com sucesso"
+}
+```
+
+---
+
+### <h3 id="get-services">GET /api/services</h3>
+
+**RESPONSE**
+```json
+[
+  {
+    "id": 1,
+    "name": "Instalação",
+    "price": 200
+  }
+]
+```
+
+---
+
+### <h3 id="get-service-by-id">GET /api/services/:id</h3>
+
+**RESPONSE**
+```json
+{
+  "id": 1,
+  "name": "Instalação",
+  "price": 200
+}
+```
+
+---
+
+### <h3 id="post-service">POST /api/services</h3>
+
+**REQUEST**
+```json
+{
+  "name": "Manutenção",
+  "price": 150
+}
+```
+
+**RESPONSE**
+```json
+{
+  "message": "Serviço criado com sucesso"
+}
+```
+
+---
+
+### <h3 id="put-service">PUT /api/services/:id</h3>
+
+**REQUEST**
+```json
+{
+  "name": "Manutenção Premium",
+  "price": 250
+}
+```
+
+**RESPONSE**
+```json
+{
+  "message": "Serviço atualizado com sucesso"
+}
+```
+
+---
+
+### <h3 id="delete-service">DELETE /api/services/:id</h3>
+
+**RESPONSE**
+```json
+{
+  "message": "Serviço removido com sucesso"
+}
+```
+
+---
+
+### <h3 id="get-orders">GET /api/orders</h3>
+
+**RESPONSE**
+```json
+[
+  {
+    "id": 1,
+    "userId": 3,
+    "total": 5200
+  }
+]
+```
+
+---
+
+### <h3 id="get-order-by-id">GET /api/orders/:id</h3>
+
+**RESPONSE**
+```json
+{
+  "id": 1,
+  "userId": 3,
+  "total": 5200
+}
+```
+
+---
+
+### <h3 id="post-order">POST /api/orders</h3>
+
+**REQUEST**
+```json
+{
+  "userId": 3
+}
+```
+
+**RESPONSE**
+```json
+{
+  "message": "Pedido criado com sucesso",
+  "orderId": 1
+}
+```
+
+---
+
+### <h3 id="get-order-items">GET /api/order-items</h3>
+
+**RESPONSE**
+```json
+[
+  {
+    "id": 1,
+    "orderId": 1,
+    "productId": 2,
+    "quantity": 1
+  }
+]
+```
+
+---
+
+### <h3 id="get-order-items-by-order">GET /api/order-items/:orderId</h3>
+
+**RESPONSE**
+```json
+[
+  {
+    "id": 1,
+    "orderId": 1,
+    "productId": 2,
+    "quantity": 1
+  }
+]
+```
+
+---
+
+### <h3 id="post-order-item">POST /api/order-items</h3>
+
+**REQUEST**
+```json
+{
+  "orderId": 1,
+  "productId": 2,
+  "quantity": 1
+}
+```
+
+**RESPONSE**
+```json
+{
+  "message": "Item adicionado ao pedido com sucesso"
+}
+```
+
+---
+
+### <h3 id="get-users">GET /api/users</h3>
+
+**RESPONSE**
+```json
+[
+  {
+    "id": 3,
+    "name": "João Silva",
+    "email": "joao@example.com"
+  }
+]
+```
+
+---
+
+### <h3 id="get-user-by-id">GET /api/users/:id</h3>
+
+**RESPONSE**
+```json
+{
+  "id": 3,
+  "name": "João Silva",
+  "email": "joao@example.com"
+}
+```
+
+---
+
+### <h3 id="post-user">POST /api/users</h3>
+
+**REQUEST**
+```json
+{
+  "name": "Maria Oliveira",
+  "email": "maria@example.com",
+  "password": "senha123"
+}
+```
+
+**RESPONSE**
+```json
+{
+  "message": "Usuário criado com sucesso"
+}
+```
+
 
 <h2 id="colab">🤝 Collaborators</h2>
 

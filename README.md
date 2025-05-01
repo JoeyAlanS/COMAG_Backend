@@ -123,6 +123,31 @@ COMAG_Backend/
 ```
 
 ---
+### <h3 id="get-products-by-category">GET /api/products?category=:category</h3>
+
+**RESPONSE**
+```json
+[
+  [
+	{
+		"id": 3,
+		"name": "Compressor ABC",
+		"price": "1200.00",
+		"description": "Um compressor que faz ABC",
+		"category": "Eletrônicos",
+		"created_at": "2025-05-01T20:35:47.000Z"
+	},
+	{
+		"id": 6,
+		"name": "Compressor XYZ",
+		"price": "2000.00",
+		"description": "Um Compressor que faz XYZ",
+		"category": "Eletrônicos",
+		"created_at": "2025-05-01T20:36:34.000Z"
+	}
+]
+]
+```
 
 ### <h3 id="get-product-by-id">GET /api/products/:id</h3>
 

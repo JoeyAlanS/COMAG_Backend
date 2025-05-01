@@ -20,6 +20,11 @@ const Product = {
   delete: (id, callback) => {
     db.query("DELETE FROM products WHERE id = ?", [id], callback);
   },
+
+  getByCategory: (category, callback) => {
+    const query = "SELECT * FROM products WHERE category = ?";
+    db.query(query, [category], callback);
+  },
 };
 
 module.exports = Product;

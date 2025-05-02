@@ -14,6 +14,8 @@ const app = express();
 app.use(express.json());
 app.use(cors()); // Permitir requisições de outros domínios
 
+app.get('/favicon.ico', (req, res) => res.sendStatus(204));
+
 // Definição das rotas
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);

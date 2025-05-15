@@ -1,25 +1,24 @@
-const db = require("../config/db");
+const mongoose = require("../config/db");
+const Counter = require("./counterModel");
 
-const Service = {
-  getAll: (callback) => {
-    db.query("SELECT * FROM services", callback);
-  },
+const serviceSchema = new mongoose.Schema({
+  customId: { type: Number, unique: true },
+  name: { type: String, required: true },
+  description: String,
+  price: Number,
+  created_at: { type: Date, default: Date.now }
+});
 
-  getById: (id, callback) => {
-    db.query("SELECT * FROM services WHERE id = ?", [id], callback);
-  },
+serviceSchema.pre("save", async function (next) {
+  if (this.isNew) {
+    const counter = await Counter.findByIdAndUpdate(
+      { _id: "serviceId" },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
+    this.customId = counter.seq;
+  }
+  next();
+});
 
-  create: (data, callback) => {
-    db.query("INSERT INTO services SET ?", data, callback);
-  },
-
-  update: (id, data, callback) => {
-    db.query("UPDATE services SET ? WHERE id = ?", [data, id], callback);
-  },
-
-  delete: (id, callback) => {
-    db.query("DELETE FROM services WHERE id = ?", [id], callback);
-  },
-};
-
-module.exports = Service;
+module.exports = mongoose.model("Service", serviceSchema);

@@ -1,21 +1,24 @@
-const db = require("../config/db");
+const mongoose = require("../config/db");
+const Counter = require("./counterModel");
 
-const Order = {
-  getAll: (callback) => {
-    db.query("SELECT * FROM orders", callback);
-  },
+const orderSchema = new mongoose.Schema({
+  customId: { type: Number, unique: true },
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  total: { type: Number, required: true },
+  status: { type: String, enum: ["pending", "completed", "canceled"], default: "pending" },
+  created_at: { type: Date, default: Date.now }
+});
 
-  getById: (id, callback) => {
-    db.query("SELECT * FROM orders WHERE id = ?", [id], callback);
-  },
-
-  create: (data, callback) => {
-    db.query("INSERT INTO orders SET ?", data, callback);
-  },
-
-  delete: (id, callback) => {
-    db.query("DELETE FROM orders WHERE id = ?", [id], callback);
+orderSchema.pre("save", async function (next) {
+  if (this.isNew) {
+    const counter = await Counter.findByIdAndUpdate(
+      { _id: "orderId" },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
+    this.customId = counter.seq;
   }
-};
+  next();
+});
 
-module.exports = Order;
+module.exports = mongoose.model("Order", orderSchema);

@@ -1,30 +1,25 @@
-const db = require("../config/db");
+const mongoose = require("../config/db");
+const Counter = require("./counterModel");
 
-const Product = {
-  getAll: (callback) => {
-    db.query("SELECT * FROM products", callback);
-  },
+const productSchema = new mongoose.Schema({
+  customId: { type: Number, unique: true },
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+  description: String,
+  category: String,
+  created_at: { type: Date, default: Date.now }
+});
 
-  getById: (id, callback) => {
-    db.query("SELECT * FROM products WHERE id = ?", [id], callback);
-  },
+productSchema.pre("save", async function (next) {
+  if (this.isNew) {
+    const counter = await Counter.findByIdAndUpdate(
+      { _id: "productId" },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
+    this.customId = counter.seq;
+  }
+  next();
+});
 
-  create: (data, callback) => {
-    db.query("INSERT INTO products SET ?", data, callback);
-  },
-
-  update: (id, data, callback) => {
-    db.query("UPDATE products SET ? WHERE id = ?", [data, id], callback);
-  },
-
-  delete: (id, callback) => {
-    db.query("DELETE FROM products WHERE id = ?", [id], callback);
-  },
-
-  getByCategory: (category, callback) => {
-    const query = "SELECT * FROM products WHERE category = ?";
-    db.query(query, [category], callback);
-  },
-};
-
-module.exports = Product;
+module.exports = mongoose.model("Product", productSchema);

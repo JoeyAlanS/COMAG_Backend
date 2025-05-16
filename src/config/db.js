@@ -1,19 +1,18 @@
-const mysql = require("mysql2");
+const mongoose = require("mongoose");
 require("dotenv").config();
 
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
+const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/comag_db";
+
+mongoose.connect(MONGO_URI);
+
+const db = mongoose.connection;
+
+db.on("error", (err) => {
+  console.error("Erro ao conectar no MongoDB:", err);
 });
 
-connection.connect((err) => {
-  if (err) {
-    console.error("Erro ao conectar no MySQL: " + err.stack);
-    return;
-  }
-  console.log("Conectado ao MySQL com sucesso!");
+db.once("open", () => {
+  console.log("Conectado ao MongoDB com sucesso!");
 });
 
-module.exports = connection;
+module.exports = mongoose;

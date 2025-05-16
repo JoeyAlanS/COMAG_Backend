@@ -1,25 +1,25 @@
-const db = require("../config/db");
+const mongoose = require("../config/db");
+const Counter = require("./counterModel");
 
-const User = {
-  getAll: (callback) => {
-    db.query("SELECT id, name, email, role FROM users", callback);
-  },
+const userSchema = new mongoose.Schema({
+  customId: { type: Number, unique: true },
+  name: { type: String, required: true },
+  email: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ["admin", "user"], default: "user" },
+  created_at: { type: Date, default: Date.now }
+});
 
-  getById: (id, callback) => {
-    db.query("SELECT id, name, email, role FROM users WHERE id = ?", [id], callback);
-  },
+userSchema.pre("save", async function (next) {
+  if (this.isNew) {
+    const counter = await Counter.findByIdAndUpdate(
+      { _id: "userId" },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
+    this.customId = counter.seq;
+  }
+  next();
+});
 
-  create: (data, callback) => {
-    db.query("INSERT INTO users SET ?", data, callback);
-  },
-
-  update: (id, data, callback) => {
-    db.query("UPDATE users SET ? WHERE id = ?", [data, id], callback);
-  },
-
-  delete: (id, callback) => {
-    db.query("DELETE FROM users WHERE id = ?", [id], callback);
-  },
-};
-
-module.exports = User;
+module.exports = mongoose.model("User", userSchema);

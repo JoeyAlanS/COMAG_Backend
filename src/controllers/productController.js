@@ -1,67 +1,93 @@
+const mongoose = require("mongoose");
 const Product = require("../models/productModel");
 
-exports.getAllProducts = (req, res) => {
-  const { category } = req.query;
-
-  if (category) {
-    Product.getByCategory(category, (err, results) => {
-      if (err) return res.status(500).json({ error: `Erro ao buscar produtos da categoria '${category}': ${err.message}` });
-      if (!results || results.length === 0) {
-        return res.status(404).json({ error: `Nenhum produto encontrado na categoria '${category}'.` });
-      }
-      res.json(results);
-    });
-  } else {
-    Product.getAll((err, results) => {
-      if (err) return res.status(500).json({ error: `Erro ao buscar produtos: ${err.message}` });
-      res.json(results);
-    });
+exports.getAllProducts = async (req, res) => {
+  try {
+    const { category } = req.query;
+    const filter = category ? { category } : {};
+    const products = await Product.find(filter);
+    res.json(products.map(p => ({
+      id: p.customId,
+      name: p.name,
+      price: p.price,
+      description: p.description,
+      category: p.category,
+      created_at: p.created_at
+    })));
+  } catch (err) {
+    res.status(500).json({ error: `Erro ao buscar produtos: ${err.message}` });
   }
 };
 
-exports.getProductById = (req, res) => {
-  Product.getById(req.params.id, (err, result) => {
-    if (err) {
-      return res.status(500).json({ error: `Erro ao buscar produto com ID ${req.params.id}: ${err.message}` });
-    }
-    if (!result || result.length === 0) {
-      return res.status(404).json({ error: `Produto com ID ${req.params.id} não encontrado.` });
-    }
-    res.json(result[0]);
-  });
+exports.getProductById = async (req, res) => {
+  const id = Number(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: "ID inválido." });
+  }
+  try {
+    const product = await Product.findOne({ customId: id });
+    if (!product) return res.status(404).json({ error: "Produto não encontrado." });
+    res.json({
+      id: product.customId,
+      name: product.name,
+      price: product.price,
+      description: product.description,
+      category: product.category,
+      created_at: product.created_at
+    });
+  } catch (err) {
+    res.status(500).json({ error: `Erro ao buscar produto: ${err.message}` });
+  }
 };
 
-exports.createProduct = (req, res) => {
-  Product.create(req.body, (err) => {
-    if (err) {
-      if (err.code === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD') {
-        return res.status(400).json({ 
-          error: `O valor fornecido para o 'price' é inválido: ${req.body.price}. Inteiro esperado.` 
-        });
-      }
-      return res.status(500).json({ error: `Erro ao criar produto: ${err.message}` });
+exports.createProduct = async (req, res) => {
+  try {
+    const product = new Product(req.body);
+    await product.save();
+    res.status(201).json({ message: "Produto criado com sucesso", id: product.customId });
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      const messages = Object.values(err.errors).map(e => e.message).join("; ");
+      return res.status(400).json({ error: `Erro de validação: ${messages}` });
     }
-    res.status(201).json({ message: "Produto criado com sucesso" });
-  });
+    if (err.name === "CastError") {
+      return res.status(400).json({ error: `Tipo de dado inválido para o campo "${err.path}".` });
+    }
+    res.status(500).json({ error: `Erro ao criar produto: ${err.message}` });
+  }
 };
 
-exports.updateProduct = (req, res) => {
-  Product.update(req.params.id, req.body, (err) => {
-    if (err) {
-      if (err.code === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD') {
-        return res.status(400).json({ 
-          error: `O valor fornecido para o 'price' é inválido: ${req.body.price}. Inteiro esperado.` 
-        });
-      }
-      return res.status(500).json({ error: `Erro ao atualizar produto com ID ${req.params.id}: ${err.message}` });
-    }
+exports.updateProduct = async (req, res) => {
+  const id = Number(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: "ID inválido." });
+  }
+  try {
+    const product = await Product.findOneAndUpdate({ customId: id }, req.body, { new: true, runValidators: true });
+    if (!product) return res.status(404).json({ error: "Produto não encontrado." });
     res.json({ message: "Produto atualizado com sucesso" });
-  });
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      const messages = Object.values(err.errors).map(e => e.message).join("; ");
+      return res.status(400).json({ error: `Erro de validação: ${messages}` });
+    }
+    if (err.name === "CastError") {
+      return res.status(400).json({ error: `Tipo de dado inválido para o campo "${err.path}".` });
+    }
+    res.status(500).json({ error: `Erro ao atualizar produto: ${err.message}` });
+  }
 };
 
-exports.deleteProduct = (req, res) => {
-  Product.delete(req.params.id, (err) => {
-    if (err) return res.status(500).json({ error: `Erro ao remover produto com ID ${req.params.id}: ${err.message}` });
+exports.deleteProduct = async (req, res) => {
+  const id = Number(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: "ID inválido." });
+  }
+  try {
+    const product = await Product.findOneAndDelete({ customId: id });
+    if (!product) return res.status(404).json({ error: "Produto não encontrado." });
     res.json({ message: "Produto removido com sucesso" });
-  });
+  } catch (err) {
+    res.status(500).json({ error: `Erro ao remover produto: ${err.message}` });
+  }
 };

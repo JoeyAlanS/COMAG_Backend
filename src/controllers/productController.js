@@ -41,6 +41,22 @@ exports.getProductById = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
+  const { name, price, category, description } = req.body;
+
+  // Validação extra para campos obrigatórios
+  if (!name || typeof name !== "string" || name.trim() === "") {
+    return res.status(400).json({ error: "O campo 'name' é obrigatório e não pode ser vazio." });
+  }
+  if (price === undefined || price === null || price === "" || isNaN(Number(price))) {
+    return res.status(400).json({ error: "O campo 'price' é obrigatório e deve ser um número." });
+  }
+  if (!category || typeof category !== "string" || category.trim() === "") {
+    return res.status(400).json({ error: "O campo 'category' é obrigatório e não pode ser vazio." });
+  }
+  if (!description || typeof description !== "string" || description.trim() === "") {
+    return res.status(400).json({ error: "O campo 'description' é obrigatório e não pode ser vazio." });
+  }
+
   try {
     const product = new Product(req.body);
     await product.save();

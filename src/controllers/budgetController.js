@@ -11,7 +11,8 @@ exports.getAllBudgets = async (req, res) => {
       nomeEmpresa: b.nomeEmpresa,
       sedeEmpresa: b.sedeEmpresa,
       equipamento: b.equipamento,
-      data: b.data
+      data: b.data,
+      mensagem: b.mensagem
     })));
   } catch (err) {
     res.status(500).json({ error: `Erro ao buscar orçamentos: ${err.message}` });
@@ -34,7 +35,8 @@ exports.getBudgetById = async (req, res) => {
       nomeEmpresa: budget.nomeEmpresa,
       sedeEmpresa: budget.sedeEmpresa,
       equipamento: budget.equipamento,
-      data: budget.data
+      data: budget.data,
+      mensagem: budget.mensagem
     });
   } catch (err) {
     res.status(500).json({ error: `Erro ao buscar orçamento: ${err.message}` });
@@ -42,7 +44,7 @@ exports.getBudgetById = async (req, res) => {
 };
 
 exports.createBudget = async (req, res) => {
-  const { nome, email, telefone, nomeEmpresa, sedeEmpresa, equipamento, data } = req.body;
+  const { nome, email, telefone, nomeEmpresa, sedeEmpresa, equipamento, data, mensagem } = req.body;
 
   // Validação extra para campos obrigatórios
   if (!nome || typeof nome !== "string" || nome.trim() === "") {
@@ -66,6 +68,9 @@ exports.createBudget = async (req, res) => {
   if (!data || isNaN(Date.parse(data))) {
     return res.status(400).json({ error: "O campo 'data' é obrigatório e deve ser uma data válida." });
   }
+    if (!mensagem || typeof mensagem !== "string" || mensagem.trim() === "") {
+    return res.status(400).json({ error: "O campo 'mensagem' é obrigatório e não pode ser vazio." });
+  }
 
   try {
     const budget = new Budget({
@@ -75,7 +80,8 @@ exports.createBudget = async (req, res) => {
       nomeEmpresa,
       sedeEmpresa,
       equipamento,
-      data
+      data,
+      mensagem
     });
     await budget.save();
     res.status(201).json({ message: "Orçamento criado com sucesso", id: budget.customId });

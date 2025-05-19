@@ -9,7 +9,8 @@ const budgetSchema = new mongoose.Schema({
   nomeEmpresa: { type: String, required: true },
   sedeEmpresa: { type: String, required: true },
   equipamento: { type: String, required: true },
-  data: { type: Date, required: true }
+  data: { type: Date, required: true },  
+  mensagem: { type : String }
 });
 
 budgetSchema.pre("save", async function (next) {

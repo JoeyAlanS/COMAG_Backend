@@ -9,7 +9,8 @@ exports.getAllServices = async (req, res) => {
       name: s.name,
       price: s.price,
       description: s.description,
-      created_at: s.created_at
+      created_at: s.created_at,
+      image:s.image
     })));
   } catch (err) {
     res.status(500).json({ error: `Erro ao buscar serviços: ${err.message}` });

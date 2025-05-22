@@ -6,7 +6,8 @@ const serviceSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: String,
   price: Number,
-  created_at: { type: Date, default: Date.now }
+  created_at: { type: Date, default: Date.now },
+  image: {type: String, unique:true}
 });
 
 serviceSchema.pre("save", async function (next) {

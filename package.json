@@ -12,10 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mongoose": "^8.3.5",
-    "mysql2": "^3.14.0"
+    "mysql2": "^3.14.0",
+    "nodemailer": "^7.0.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

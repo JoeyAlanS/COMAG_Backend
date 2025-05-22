@@ -7,7 +7,8 @@ const productSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   description: String,
   category: String,
-  created_at: { type: Date, default: Date.now }
+  created_at: { type: Date, default: Date.now },
+  image:{type: String, unique:true}
 });
 
 productSchema.pre("save", async function (next) {

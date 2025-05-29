@@ -1,5 +1,6 @@
 const mongoose = require("../config/db");
 const Counter = require("./counterModel");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
   customId: { type: Number, unique: true },
@@ -10,6 +11,7 @@ const userSchema = new mongoose.Schema({
   created_at: { type: Date, default: Date.now }
 });
 
+// Criptografa a senha antes de salvar
 userSchema.pre("save", async function (next) {
   if (this.isNew) {
     const counter = await Counter.findByIdAndUpdate(
@@ -18,6 +20,10 @@ userSchema.pre("save", async function (next) {
       { new: true, upsert: true }
     );
     this.customId = counter.seq;
+  }
+  if (this.isModified("password")) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
   }
   next();
 });

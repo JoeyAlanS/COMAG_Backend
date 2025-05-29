@@ -8,6 +8,8 @@ const productRoutes = require("./routes/products");
 const serviceRoutes = require("./routes/services");
 const orderItemRoutes = require("./routes/orderItems");
 const budgetRoutes = require("./routes/budgets");
+const authRoutes = require("./routes/auth");
+const authenticateToken = require("./middleware/auth");
 
 
 const app = express();
@@ -24,6 +26,12 @@ app.use("/api/products", productRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/order-items", orderItemRoutes)
 app.use("/api/budgets", budgetRoutes)
+app.use("/api/auth", authRoutes);
+
+// Exemplo de rota protegida
+app.get("/api/protected", authenticateToken, (req, res) => {
+  res.json({ message: "Acesso autorizado!", user: req.user });
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

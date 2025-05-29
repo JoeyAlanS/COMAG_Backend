@@ -7,7 +7,8 @@ exports.getAllUsers = async (req, res) => {
     res.json(users.map(u => ({
       id: u.customId,
       name: u.name,
-      email: u.email,
+      email: u.email, // Ensure email is used here
+      password: u.password,
       role: u.role,
       created_at: u.created_at
     })));

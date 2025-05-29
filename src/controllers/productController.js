@@ -12,7 +12,8 @@ exports.getAllProducts = async (req, res) => {
       price: p.price,
       description: p.description,
       category: p.category,
-      created_at: p.created_at
+      created_at: p.created_at,
+      image: p.image
     })));
   } catch (err) {
     res.status(500).json({ error: `Erro ao buscar produtos: ${err.message}` });
@@ -33,7 +34,8 @@ exports.getProductById = async (req, res) => {
       price: product.price,
       description: product.description,
       category: product.category,
-      created_at: product.created_at
+      created_at: product.created_at,
+      image:product.image
     });
   } catch (err) {
     res.status(500).json({ error: `Erro ao buscar produto: ${err.message}` });
@@ -41,7 +43,7 @@ exports.getProductById = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
-  const { name, price, category, description } = req.body;
+  const { name, price, category, description, image } = req.body;
 
   // Validação extra para campos obrigatórios
   if (!name || typeof name !== "string" || name.trim() === "") {
@@ -55,6 +57,9 @@ exports.createProduct = async (req, res) => {
   }
   if (!description || typeof description !== "string" || description.trim() === "") {
     return res.status(400).json({ error: "O campo 'description' é obrigatório e não pode ser vazio." });
+  }
+  if (!image || typeof image !== "string" || image.trim() === "") {
+    return res.status(400).json({ error: "O campo 'image' é obrigatório e não pode ser vazio." });
   }
 
   try {
